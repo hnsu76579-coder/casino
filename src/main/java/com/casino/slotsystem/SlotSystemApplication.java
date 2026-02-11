@@ -8,12 +8,13 @@ import jakarta.annotation.PostConstruct;
 @EnableCaching
 @SpringBootApplication
 public class SlotSystemApplication {
+	   @PostConstruct
+    public void init() {
+        TimeZone.setDefault(TimeZone.getTimeZone("Asia/Kolkata"));
+    }
 
-	@PostConstruct
-	public static void main(String[] args) {
-		TimeZone.setDefault(TimeZone.getTimeZone("Asia/Kolkata"));
-
-		SpringApplication.run(SlotSystemApplication.class, args);
-	}
+	  public static void main(String[] args) {
+        SpringApplication.run(SlotSystemApplication.class, args);
+    }
 
 }
