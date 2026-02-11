@@ -39,36 +39,35 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
 
 
-   @Override
-protected void doFilterInternal(HttpServletRequest req,
-                                HttpServletResponse res,
-                                FilterChain chain)
-        throws IOException, ServletException {
+    @Override
+    protected void doFilterInternal(HttpServletRequest req,
+                                    HttpServletResponse res,
+                                    FilterChain chain)
+            throws IOException, ServletException {
 
-    String header = req.getHeader("Authorization");
+        String header = req.getHeader("Authorization");
 
-    if (header != null && header.startsWith("Bearer ")) {
+        if (header != null && header.startsWith("Bearer ")) {
 
-        try {
-            String token = header.substring(7);
-            String username = jwtUtil.extractUsername(token);
+            try {
+                String token = header.substring(7);
+                String username = jwtUtil.extractUsername(token);
 
-            UsernamePasswordAuthenticationToken auth =
-                    new UsernamePasswordAuthenticationToken(
-                            username, null, List.of());
+                UsernamePasswordAuthenticationToken auth =
+                        new UsernamePasswordAuthenticationToken(
+                                username, null, List.of());
 
-            SecurityContextHolder.getContext().setAuthentication(auth);
+                SecurityContextHolder.getContext().setAuthentication(auth);
 
-        } catch (JwtException e) {
-            res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            return;
+            } catch (JwtException e) {
+                res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                return;
+            }
         }
+
+        // Always continue filter chain
+        chain.doFilter(req, res);
     }
 
-    // Always continue filter chain
-    chain.doFilter(req, res);
 }
-
-}
-
 
