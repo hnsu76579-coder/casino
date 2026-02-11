@@ -11,6 +11,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Sort;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -82,9 +83,24 @@ public class SlotService {
 
         // 3️⃣ Send socket update
         SlotResponse response = mapToResponse(savedSlot);
-        messagingTemplate.convertAndSend("/topic/slots", response);
+
+// Send update to Node socket server
+        String socketServerUrl = System.getenv("SOCKET_SERVER_URL");
+
+        RestTemplate restTemplate = new RestTemplate();
+
+        try {
+            restTemplate.postForEntity(
+                    socketServerUrl + "/emit-slot-update",
+                    response,
+                    String.class
+            );
+        } catch (Exception e) {
+            System.out.println("Socket server not reachable: " + e.getMessage());
+        }
 
         return response;
+
     }
     @Cacheable(value = "slot", key = "#id")
     public SlotResponse getSlotById(Long id) {
