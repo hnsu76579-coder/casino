@@ -3,12 +3,16 @@ package com.casino.slotsystem;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
-
+import java.util.TimeZone;
+import jakarta.annotation.PostConstruct;
 @EnableCaching
 @SpringBootApplication
 public class SlotSystemApplication {
 
+	@PostConstruct
 	public static void main(String[] args) {
+		TimeZone.setDefault(TimeZone.getTimeZone("Asia/Kolkata"));
+
 		SpringApplication.run(SlotSystemApplication.class, args);
 	}
 
