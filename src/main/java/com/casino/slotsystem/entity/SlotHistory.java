@@ -1,7 +1,7 @@
 package com.casino.slotsystem.entity;
 
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 @Entity
 @Table(name = "slot_history")
@@ -15,12 +15,12 @@ public class SlotHistory {
     @JoinColumn(name = "slot_id", nullable = false)
     private Slot slot;
 
-    // -1 allowed (means "No number selected")
     @Column(nullable = false)
     private Integer number;
 
+    // 🔥 Proper timezone-aware timestamp
     @Column(name = "changed_at", nullable = false)
-    private LocalDateTime changedAt;
+    private OffsetDateTime changedAt;
 
     // ---------- getters & setters ----------
 
@@ -44,11 +44,11 @@ public class SlotHistory {
         this.number = number;
     }
 
-    public LocalDateTime getChangedAt() {
+    public OffsetDateTime getChangedAt() {
         return changedAt;
     }
 
-    public void setChangedAt(LocalDateTime changedAt) {
+    public void setChangedAt(OffsetDateTime changedAt) {
         this.changedAt = changedAt;
     }
 }
