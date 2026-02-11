@@ -39,19 +39,15 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
 
 
-    @Override
-    protected void doFilterInternal(HttpServletRequest req,
-                                    HttpServletResponse res,
-                                    FilterChain chain)
-            throws IOException, ServletException {
+   @Override
+protected void doFilterInternal(HttpServletRequest req,
+                                HttpServletResponse res,
+                                FilterChain chain)
+        throws IOException, ServletException {
 
-        String header = req.getHeader("Authorization");
+    String header = req.getHeader("Authorization");
 
-        // 🔐 Admin routes REQUIRE token
-        if (header == null || !header.startsWith("Bearer ")) {
-            res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            return;
-        }
+    if (header != null && header.startsWith("Bearer ")) {
 
         try {
             String token = header.substring(7);
@@ -63,11 +59,16 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
             SecurityContextHolder.getContext().setAuthentication(auth);
 
-            chain.doFilter(req, res);
-
         } catch (JwtException e) {
             res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            return;
         }
     }
+
+    // Always continue filter chain
+    chain.doFilter(req, res);
 }
+
+}
+
 
