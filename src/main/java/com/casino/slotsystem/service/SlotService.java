@@ -7,11 +7,14 @@ import com.casino.slotsystem.repository.SlotHistoryRepository;
 import com.casino.slotsystem.repository.SlotRepository;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+
 import org.springframework.data.domain.Sort;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,7 +37,7 @@ public class SlotService {
     // PUBLIC
     @Cacheable("slots")
     public List<SlotResponse> getAllSlots() {
-       return slotRepository.findAll(Sort.by(Sort.Direction.ASC, "id"))
+        return slotRepository.findAll(Sort.by(Sort.Direction.ASC, "id"))
                 .stream()
                 .map(this::mapToResponse)
                 .toList();
@@ -70,11 +73,14 @@ public class SlotService {
         slot.setNumber(number);
         Slot savedSlot = slotRepository.save(slot);
 
-        // 2️⃣ Save history
+        // 2️⃣ Save history (timezone safe)
         SlotHistory history = new SlotHistory();
         history.setSlot(savedSlot);
         history.setNumber(number);
-        history.setChangedAt(LocalDateTime.now());
+
+        history.setChangedAt(
+                OffsetDateTime.now(ZoneId.of("Asia/Kolkata"))
+        );
 
         slotHistoryRepository.save(history);
 
@@ -102,4 +108,3 @@ public class SlotService {
         );
     }
 }
-
