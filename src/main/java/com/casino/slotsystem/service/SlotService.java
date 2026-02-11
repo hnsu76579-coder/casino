@@ -8,6 +8,7 @@ import com.casino.slotsystem.repository.SlotRepository;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
@@ -34,10 +35,10 @@ public class SlotService {
     // PUBLIC
     @Cacheable("slots")
     public List<SlotResponse> getAllSlots() {
-        return slotRepository.findAll()
+        return slotRepository.findAll(Sort.by(Sort.Direction.ASC, "id"))
                 .stream()
                 .map(this::mapToResponse)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     // ADMIN - edit slot details
@@ -75,6 +76,7 @@ public class SlotService {
         history.setSlot(savedSlot);
         history.setNumber(number);
         history.setChangedAt(LocalDateTime.now());
+
 
         slotHistoryRepository.save(history);
 
