@@ -3,8 +3,8 @@ package com.casino.slotsystem.service;
 import com.casino.slotsystem.dto.SlotHistoryResponse;
 import com.casino.slotsystem.repository.SlotHistoryRepository;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+// import org.springframework.data.domain.PageRequest;
+// import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -65,4 +65,5 @@ public List<SlotHistoryResponse> getSlotHistory(Long slotId) {
             .toList();
 }
 }
+
 
