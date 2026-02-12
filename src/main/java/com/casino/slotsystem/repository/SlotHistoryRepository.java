@@ -1,8 +1,8 @@
 package com.casino.slotsystem.repository;
 
 import com.casino.slotsystem.entity.SlotHistory;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+// import org.springframework.data.domain.Page;
+// import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDateTime;
@@ -20,4 +20,5 @@ public interface SlotHistoryRepository extends JpaRepository<SlotHistory, Long> 
         LocalDateTime date
 );
 }
+
 
