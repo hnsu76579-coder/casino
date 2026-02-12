@@ -43,6 +43,10 @@ public class SlotService {
     }
 
     // ADMIN - edit slot details
+    @CacheEvict(
+            value = { "slots", "slot" },
+            allEntries = true
+    )
     public SlotResponse editSlot(Long id, EditSlotRequest request) {
         Slot slot = slotRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Slot not found"));
@@ -120,3 +124,4 @@ public class SlotService {
         );
     }
 }
+
