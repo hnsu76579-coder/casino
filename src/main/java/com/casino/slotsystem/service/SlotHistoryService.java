@@ -9,6 +9,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 @Service
 public class SlotHistoryService {
 
@@ -17,27 +20,49 @@ public class SlotHistoryService {
     public SlotHistoryService(SlotHistoryRepository repository) {
         this.repository = repository;
     }
-    @Cacheable(
-            value = "slotHistory",
-            key = "#slotId + ':' + #page"
-    )
-    public List<SlotHistoryResponse> getSlotHistory(
-            Long slotId,
-            int page
-    ) {
-        // 1 month ≈ 30 records
-        PageRequest pageable = PageRequest.of(
-                page,
-                30,
-                Sort.by("changedAt").descending()
-        );
+    // @Cacheable(
+    //         value = "slotHistory",
+    //         key = "#slotId + ':' + #page"
+    // )
+    // public List<SlotHistoryResponse> getSlotHistory(
+    //         Long slotId,
+    //         int page
+    // ) {
+    //     // 1 month ≈ 30 records
+    //     PageRequest pageable = PageRequest.of(
+    //             page,
+    //             30,
+    //             Sort.by("changedAt").descending()
+    //     );
 
-        return repository
-                .findBySlotIdOrderByChangedAtDesc(slotId, pageable)
-                .map(h -> new SlotHistoryResponse(
-                        h.getNumber(),
-                        h.getChangedAt()
-                ))
-                .getContent();
-    }
+    //     return repository
+    //             .findBySlotIdOrderByChangedAtDesc(slotId, pageable)
+    //             .map(h -> new SlotHistoryResponse(
+    //                     h.getNumber(),
+    //                     h.getChangedAt()
+    //             ))
+    //             .getContent();
+    // }
+
+    @Cacheable(
+        value = "slotHistory",
+        key = "#slotId"
+)
+public List<SlotHistoryResponse> getSlotHistory(Long slotId) {
+
+    LocalDateTime oneMonthAgo = LocalDateTime.now().minusMonths(1);
+
+    return repository
+            .findBySlotIdAndChangedAtAfterOrderByChangedAtDesc(
+                    slotId,
+                    oneMonthAgo
+            )
+            .stream()
+            .map(h -> new SlotHistoryResponse(
+                    h.getNumber(),
+                    h.getChangedAt()
+            ))
+            .toList();
 }
+}
+
