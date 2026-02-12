@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 import java.time.LocalDateTime;
-import java.util.List;
+
 
 @Service
 public class SlotHistoryService {
@@ -65,5 +65,6 @@ public List<SlotHistoryResponse> getSlotHistory(Long slotId) {
             .toList();
 }
 }
+
 
 
