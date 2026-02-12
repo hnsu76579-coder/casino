@@ -17,17 +17,7 @@ public class SlotHistoryController {
         this.service = service;
     }
 
-    // @GetMapping("/{id}/history")
-    // public ApiResponse<List<SlotHistoryResponse>> getHistory(
-    //         @PathVariable Long id,
-    //         @RequestParam(defaultValue = "0") int page
-    // ) {
-    //     return new ApiResponse<>(
-    //             true,
-    //             "Slot history fetched",
-    //             service.getSlotHistory(id, page)
-    //     );
-    // }
+    
     @GetMapping("/{id}/history")
 public ApiResponse<List<SlotHistoryResponse>> getHistory(
         @PathVariable Long id
@@ -39,4 +29,5 @@ public ApiResponse<List<SlotHistoryResponse>> getHistory(
     );
 }
 }
+
 
