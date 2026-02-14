@@ -112,6 +112,42 @@ public class SlotService {
                 .orElseThrow(() -> new RuntimeException("Slot not found"));
         return mapToResponse(slot);
     }
+    @CacheEvict(
+        value = { "slots", "slot", "slotHistory" },
+        allEntries = true
+)
+public void resetAllSlots() {
+
+    List<Slot> slots = slotRepository.findAll();
+
+    for (Slot slot : slots) {
+
+        slot.setNumber(-1);
+        Slot saved = slotRepository.save(slot);
+
+        SlotHistory history = new SlotHistory();
+        history.setSlot(saved);
+        history.setNumber(-1);
+        history.setChangedAt(LocalDateTime.now());
+
+        slotHistoryRepository.save(history);
+    }
+
+    // 🔥 Emit ONE reset event
+    String socketServerUrl = System.getenv("SOCKET_SERVER_URL");
+    RestTemplate restTemplate = new RestTemplate();
+
+    try {
+        restTemplate.postForEntity(
+                socketServerUrl + "/emit-reset-all",
+                null,
+                String.class
+        );
+    } catch (Exception e) {
+        System.out.println("Socket server not reachable: " + e.getMessage());
+    }
+}
+
 
     private SlotResponse mapToResponse(Slot slot) {
         return new SlotResponse(
@@ -124,4 +160,5 @@ public class SlotService {
         );
     }
 }
+
 
