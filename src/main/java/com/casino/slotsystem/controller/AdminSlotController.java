@@ -28,6 +28,17 @@ public class AdminSlotController {
                 slotService.editSlot(id, request)
         );
     }
+     @PostMapping("/reset-all")
+    public ApiResponse<String> resetAllSlots() {
+
+        slotService.resetAllSlots();
+
+        return new ApiResponse<>(
+                true,
+                "All slots reset successfully",
+                null
+        );
+    }
 
     // Change number (-1 allowed)
     @PutMapping("/{id}/number")
@@ -42,3 +53,4 @@ public class AdminSlotController {
         );
     }
 }
+
