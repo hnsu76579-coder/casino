@@ -129,12 +129,7 @@ public void resetAllSlots() {
         slot.setNumber(-1);
         Slot saved = slotRepository.save(slot);
 
-        SlotHistory history = new SlotHistory();
-        history.setSlot(saved);
-        history.setNumber(-1);
-        history.setChangedAt(LocalDateTime.now());
-
-        slotHistoryRepository.save(history);
+       
     }
 
     // 🔥 Emit ONE reset event
@@ -164,6 +159,7 @@ public void resetAllSlots() {
         );
     }
 }
+
 
 
 
