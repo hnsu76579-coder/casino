@@ -16,6 +16,7 @@ import org.springframework.web.client.RestTemplate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.scheduling.annotation.Scheduled;
 
 @Service
 public class SlotService {
@@ -31,7 +32,10 @@ public class SlotService {
         this.messagingTemplate = messagingTemplate;
         this.slotHistoryRepository=slotHistoryRepository;
     }
-
+    @Scheduled(cron = "0 0 20 * * ?", zone = "Asia/Kolkata")
+    public void scheduledReset() {
+        resetAllSlots();
+    }
 
     // PUBLIC
     @Cacheable("slots")
@@ -160,5 +164,6 @@ public void resetAllSlots() {
         );
     }
 }
+
 
 
